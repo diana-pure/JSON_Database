@@ -1,0 +1,13 @@
+# Project exclude paths
+/.gradle/
+/JSON Database/task/build/
+/JSON Database/task/out/
+/JSON Database/task/out/production/classes/
+/Problems/Convert to bytes/out/
+/Problems/Convert to bytes/out/production/classes/
+/Problems/Count words/out/
+/Problems/Count words/out/production/classes/
+/Problems/Reverse input text/out/
+/Problems/Reverse input text/out/production/classes/
+/Problems/Stock Broker/out/
+/Problems/Stock Broker/out/production/classes/

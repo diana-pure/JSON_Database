@@ -1,5 +1,12 @@
 package server;
 
+import server.command.CommandExecutor;
+import server.command.DeleteCommand;
+import server.command.GetCommand;
+import server.command.SetCommand;
+import server.database.ArrayDatabase;
+import server.database.Database;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -10,13 +17,14 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class Main {
+    private static final String ADDRESS = "127.0.0.1";
+    private static final int PORT = 23456;
 
     public static void main(String[] args) {
-        String[] database = new String[1000];
-        String address = "127.0.0.1";
-        int port = 23456;
+        Database database = new ArrayDatabase();
+        CommandExecutor executor = new CommandExecutor();
 
-        try (ServerSocket server = new ServerSocket(port, 50, InetAddress.getByName(address))) {
+        try (ServerSocket server = new ServerSocket(PORT, 50, InetAddress.getByName(ADDRESS))) {
             print("Server started!");
 
             do {
@@ -35,33 +43,13 @@ public class Main {
 
                 switch (command) {
                     case "set":
-                        if (!isInRange(index)) {
-                            messageToSend = "ERROR";
-                        } else {
-                            database[index] = value;
-                            messageToSend = "OK";
-                        }
-                        send(output, messageToSend);
-                        print("Sent: " + messageToSend);
+                        executor.setCommand(new SetCommand(database, index, value));
                         break;
                     case "get":
-                        if (!isInRange(index) || database[index] == null) {
-                            messageToSend = "ERROR";
-                        } else {
-                            messageToSend = database[index];
-                        }
-                        send(output, messageToSend);
-                        print("Sent: " + messageToSend);
+                        executor.setCommand(new GetCommand(database, index));
                         break;
                     case "delete":
-                        if (!isInRange(index)) {
-                            messageToSend = "ERROR";
-                        } else {
-                            database[index] = null;
-                            messageToSend = "OK";
-                        }
-                        send(output, messageToSend);
-                        print("Sent: " + messageToSend);
+                        executor.setCommand(new DeleteCommand(database, index));
                         break;
                     case "exit":
                         messageToSend = "OK";
@@ -69,14 +57,13 @@ public class Main {
                         print("Sent: " + messageToSend);
                         return;
                 }
+                messageToSend = executor.executeCommand();
+                send(output, messageToSend);
+                print("Sent: " + messageToSend);
             } while (true);
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private static boolean isInRange(Integer index) {
-        return index >= 0 && index < 1000;
     }
 
     private static void print(String s) {

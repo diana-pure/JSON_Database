@@ -10,6 +10,9 @@ import java.net.InetAddress;
 import java.net.Socket;
 
 public class Main {
+    private static final String ADDRESS = "127.0.0.1";
+    private static final int PORT = 23456;
+
     @Parameter(names = {"-t"})
     String type;
     @Parameter(names = {"-i"})
@@ -24,10 +27,7 @@ public class Main {
                 .build()
                 .parse(args);
 
-        String address = "127.0.0.1";
-        int port = 23456;
-
-        try (Socket socket = new Socket(InetAddress.getByName(address), port)) {
+        try (Socket socket = new Socket(InetAddress.getByName(ADDRESS), PORT)) {
             DataInputStream input = new DataInputStream(socket.getInputStream());
             DataOutputStream output = new DataOutputStream(socket.getOutputStream());
 
