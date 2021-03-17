@@ -1,18 +1,21 @@
 package server.command;
 
 import server.database.Database;
+import server.database.DatabaseIndex;
 
-public class GetCommand implements Command {
-    private Database database;
-    private Integer index;
+import java.util.Map;
 
-    public GetCommand(Database database, Integer index) {
+public class GetCommand<T> implements Command {
+    private Database<T> database;
+    private DatabaseIndex<T> index;
+
+    public GetCommand(Database<T> database, DatabaseIndex<T> index) {
         this.database = database;
         this.index = index;
     }
 
     @Override
-    public String execute() {
+    public Map<String, String> execute() {
         return database.get(index);
     }
 }

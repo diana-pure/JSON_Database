@@ -2,12 +2,15 @@ package client;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
+import com.google.gson.Gson;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
     private static final String ADDRESS = "127.0.0.1";
@@ -15,9 +18,9 @@ public class Main {
 
     @Parameter(names = {"-t"})
     String type;
-    @Parameter(names = {"-i"})
-    int index;
-    @Parameter(names = {"-m"})
+    @Parameter(names = {"-k"})
+    String index;
+    @Parameter(names = {"-v"})
     String value;
 
     public static void main(String[] args) {
@@ -32,23 +35,24 @@ public class Main {
             DataOutputStream output = new DataOutputStream(socket.getOutputStream());
 
             print("Client started!");
-            String messageToSend = "";
-
+            Map<String, String> requestData = new HashMap<>();
+            requestData.put("type", main.type );
             switch (main.type) {
                 case "get":
-                    messageToSend = main.type + " " + main.index;
+                    requestData.put("key",  main.index);
                     break;
                 case "set":
-                    messageToSend = main.type + " " + main.index + " " + main.value;
+                    requestData.put("key",  main.index);
+                    requestData.put("value", main.value);
                     break;
                 case "delete":
-                    messageToSend = main.type + " " + main.index;
+                    requestData.put("key",  main.index);
                     break;
                 case "exit":
-                    messageToSend = main.type;
                     break;
             }
 
+            String messageToSend = new Gson().toJson(requestData);
             output.writeUTF(messageToSend);
             print("Sent: " + messageToSend);
 

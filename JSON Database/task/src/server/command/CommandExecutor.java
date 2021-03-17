@@ -1,5 +1,7 @@
 package server.command;
 
+import java.util.Map;
+
 public class CommandExecutor {
     private Command command;
 
@@ -7,7 +9,7 @@ public class CommandExecutor {
         this.command = command;
     }
 
-    public String executeCommand() {
+    public Map<String, String> executeCommand() {
         return command.execute();
     }
 }
