@@ -4,6 +4,7 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
@@ -11,7 +12,12 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class RequestBuilder {
-    private static final String requestURI = "JSON Database\\task\\src\\client\\data\\";
+    private static final String requestURI = System.getProperty("user.dir") + File.separator +
+            "JSON Database" + File.separator +
+            "task" + File.separator +
+            "src" + File.separator +
+            "client" + File.separator +
+            "data" + File.separator;
     @Parameter(names = {"-in"})
     String file;
     @Parameter(names = {"-t"})

@@ -1,7 +1,6 @@
 package server.database;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -14,7 +13,12 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
 public class DatabaseFile implements Database<String> {
-    private String databaseURI = "JSON Database\\task\\src\\server\\data\\db.json";
+    private String databaseURI = System.getProperty("user.dir") + File.separator +
+            "JSON Database" + File.separator +
+            "task" + File.separator +
+            "src" + File.separator +
+            "server" + File.separator +
+            "data" + File.separator + "db.json";
     private ReadWriteLock lock = new ReentrantReadWriteLock();
     private Lock readLock = lock.readLock();
     private Lock writeLock = lock.writeLock();
@@ -68,12 +72,15 @@ public class DatabaseFile implements Database<String> {
     private List<Row> readUnsafe() {
         Path path = new File(databaseURI).toPath();
         try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+            if (!validate(reader)) {
+                return new ArrayList<>();
+            }
             Row[] rows = new GsonBuilder().create().fromJson(reader, Row[].class);
             return new ArrayList<>(Arrays.asList(rows));
-        } catch (IOException e) {
+        } catch (IOException | JsonParseException e) {
             e.printStackTrace();
         }
-        return Collections.emptyList();
+        return new ArrayList<>();
     }
 
     private void writeUnsafe(List<Row> rows) {
@@ -82,5 +89,15 @@ public class DatabaseFile implements Database<String> {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean validate(Reader reader) throws IOException {
+        reader.mark(1);
+        if (reader.read() != '[') {
+            reader.reset();
+            return false;
+        }
+        reader.reset();
+        return true;
     }
 }

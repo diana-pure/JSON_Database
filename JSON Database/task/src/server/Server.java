@@ -22,11 +22,11 @@ public class Server implements Runnable {
     public void run() {
         do {
             try {
-                pool.execute(new RequestHandler(serverSocket.accept(), database));
+                pool.execute(new RequestHandler(serverSocket.accept(), database, serverSocket));
             } catch (IOException | RuntimeException ex) {
                 pool.shutdown();
                 break;
             }
-        } while (true);
+        } while (!serverSocket.isClosed());
     }
 }

@@ -7,19 +7,22 @@ import server.database.Database;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
 
 public class RequestHandler implements Runnable {
     private final Database<String> database;
     private final Socket socket;
+    private final ServerSocket serverSocket;
     private final CommandExecutor executor = new CommandExecutor();
     private DataInputStream input = null;
     private DataOutputStream output = null;
 
-    RequestHandler(Socket socket, Database<String> database) {
+    RequestHandler(Socket socket, Database<String> database, ServerSocket serverSocket) {
         this.socket = socket;
         this.database = database;
+        this.serverSocket = serverSocket;
     }
 
     public void run() {
@@ -39,6 +42,7 @@ public class RequestHandler implements Runnable {
 
             if (requestData.get("type").equals("exit")) {
                 socket.close();
+                serverSocket.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
