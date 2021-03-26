@@ -1,7 +1,7 @@
 package server.command;
 
-import java.util.Map;
+import server.database.Response;
 
 public interface Command {
-    Map<String, String> execute();
+    Response execute();
 }

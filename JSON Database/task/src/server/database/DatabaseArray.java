@@ -7,35 +7,35 @@ public class DatabaseArray implements Database<Integer> {
     private String[] database = new String[DB_SIZE];
 
     @Override
-    public Map<String, String> set(DatabaseIndex<Integer> index, String value) {
+    public Response set(Index<Integer> index, String value) {
         if (!isInRange(index)) {
-            return Map.of("ERROR", "No such key");
+            return new Response("ERROR", "No such key");
         } else {
             database[index.get()] = value;
-            return Map.of("OK", "");
+            return new Response("OK", "");
         }
     }
 
     @Override
-    public Map<String, String> get(DatabaseIndex<Integer> index) {
+    public Response get(Index<Integer> index) {
         if (!isInRange(index) || database[index.get()] == null) {
-            return Map.of("ERROR", "No such key");
+            return new Response("ERROR", "No such key");
         } else {
-            return Map.of("OK", database[index.get()]);
+            return new Response("OK", database[index.get()]);
         }
     }
 
     @Override
-    public Map<String, String> delete(DatabaseIndex<Integer> index) {
+    public Response delete(Index<Integer> index) {
         if (!isInRange(index)) {
-            return Map.of("ERROR", "No such key");
+            return new Response("ERROR", "No such key");
         } else {
             database[index.get()] = null;
-            return Map.of("OK", "");
+            return new Response("OK", "");
         }
     }
 
-    private static boolean isInRange(DatabaseIndex<Integer> index) {
+    private static boolean isInRange(Index<Integer> index) {
         return index.get() >= 0 && index.get() < DB_SIZE;
     }
 }

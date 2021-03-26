@@ -1,23 +1,22 @@
 package server.command;
 
 import server.database.Database;
-import server.database.DatabaseIndex;
-
-import java.util.Map;
+import server.database.Index;
+import server.database.Response;
 
 public class SetCommand<T> implements Command {
     private Database<T> database;
-    private DatabaseIndex<T> index;
+    private Index<T> index;
     private String value;
 
-    public SetCommand(Database<T> database, DatabaseIndex<T> index, String value) {
+    public SetCommand(Database<T> database, Index<T> index, String value) {
         this.database = database;
         this.index = index;
         this.value = value;
     }
 
     @Override
-    public Map<String, String> execute() {
+    public Response execute() {
         return database.set(index, value);
     }
 }

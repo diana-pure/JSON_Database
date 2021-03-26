@@ -1,21 +1,22 @@
 package server.command;
 
 import server.database.Database;
-import server.database.DatabaseIndex;
+import server.database.Index;
+import server.database.Response;
 
 import java.util.Map;
 
 public class DeleteCommand<T> implements Command {
     private Database<T> database;
-    private DatabaseIndex<T> index;
+    private Index<T> index;
 
-    public DeleteCommand(Database<T> database, DatabaseIndex<T> index) {
+    public DeleteCommand(Database<T> database, Index<T> index) {
         this.database = database;
         this.index = index;
     }
 
     @Override
-    public Map<String, String> execute() {
+    public Response execute() {
         return database.delete(index);
     }
 }

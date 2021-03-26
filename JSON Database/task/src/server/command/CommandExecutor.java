@@ -1,6 +1,6 @@
 package server.command;
 
-import java.util.Map;
+import server.database.Response;
 
 public class CommandExecutor {
     private Command command;
@@ -9,7 +9,7 @@ public class CommandExecutor {
         this.command = command;
     }
 
-    public Map<String, String> executeCommand() {
+    public Response executeCommand() {
         return command.execute();
     }
 }

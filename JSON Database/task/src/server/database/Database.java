@@ -1,11 +1,9 @@
 package server.database;
 
-import java.util.Map;
-
 public interface Database<T> {
-    Map<String, String> set(DatabaseIndex<T> index, String value);
+    Response set(Index<T> index, String value);
 
-    Map<String, String> get(DatabaseIndex<T> index);
+    Response get(Index<T> index);
 
-    Map<String, String> delete(DatabaseIndex<T> index);
+    Response delete(Index<T> index);
 }
